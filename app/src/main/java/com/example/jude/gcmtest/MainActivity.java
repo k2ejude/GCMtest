@@ -204,6 +204,7 @@ public class MainActivity extends ActionBarActivity {
                 }
 
                 protected void onPostExecute(String msg){
+                    Log.d(TAG, msg);
                     mDisplay.append(msg + "\n");
                 }
             }.execute(null,null,null);

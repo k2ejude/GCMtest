@@ -1,8 +1,8 @@
 package com.example.jude.gcmtest;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +20,7 @@ public class GcmIntentService extends IntentService {
     static final String TAG = "GCMDemo";
 
     public GcmIntentService() {
-        super("GcmIntentService");
+        super("59551483428");
     }
 
     @Override
@@ -50,8 +50,10 @@ public class GcmIntentService extends IntentService {
                     } catch (InterruptedException e){}
                 }
                 Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
-                sendNotification("Received: " + extras.toString());
-                Log.i(TAG, "Received: "+ extras.toString());
+                sendNotification("Received: " + extras.getString("Message").toString());
+                Log.i(TAG, "Received: "+ extras.getString("Message").toString());
+            }else if(GoogleCloudMessaging.MESSAGE_TYPE_SEND_EVENT.equals(messageType)){
+                Log.d("Test","tre");
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
@@ -59,11 +61,13 @@ public class GcmIntentService extends IntentService {
 
     private void sendNotification(String msg){
         mNotificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setContentTitle("GCM Notification").setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                .setContentText(msg);
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFCATION_ID, mBuilder.build());
+//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+        Notification mBuilder = new Notification.Builder(getApplicationContext()).setSmallIcon(R.mipmap.ic_launcher).setContentTitle("PMS").setContentText(msg).build(); // 建立通知
+//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.mipmap.ic_launcher).setContentTitle("GCM Notification").setContentText(msg);
+        mNotificationManager.notify(NOTIFCATION_ID, mBuilder);
+//        final int notifyID = 1; // 通知的識別號碼
+//        final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE); // 取得系統的通知服務
+//        final Notification notification = new Notification.Builder(getApplicationContext()).setSmallIcon(R.mipmap.ic_launcher).setContentTitle("內容標題").setContentText("內容文字").build(); // 建立通知
+//        notificationManager.notify(notifyID, notification); // 發送通知
     }
 }
